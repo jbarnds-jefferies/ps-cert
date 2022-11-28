@@ -12,8 +12,10 @@ if (-Not $path.Extension -match '\.ps1|\.psm1|\.psd1|\.ps1xml') {
   Exit 1
 }
 
+
 try {
-  $content =  Get-Content -Path $path.FullName -ErrorAction Stop
+  $full_path = Resolve-Path $path
+  $content =  Get-Content -Path $full_path -ErrorAction Stop
   $string_builder = New-Object -TypeName System.Text.StringBuilder -ErrorAction Stop
   ForEach ($line in $content) {
     if ($line -match '^# SIG # Begin signature block|^<!-- SIG # Begin signature block -->') {
@@ -23,7 +25,7 @@ try {
     $null = $string_builder.AppendLine($line)
   }
 
-  Set-Content -Path $path.FullName -Value $string_builder.ToString()
+  Set-Content -Path $full_path -Value $string_builder.ToString()
 } catch {
   Pop-Location
   Write-Error -Message $path.Exception.Message
