@@ -6,8 +6,8 @@ Param (
 )
 
 Push-Location -Path $env:USERPROFILE
-  
-if (-Not $script.Extension -match '\.ps1|\.psm1|\.psd1|\.ps1xml') { 
+
+if (-Not $path.Extension -match '\.ps1|\.psm1|\.psd1|\.ps1xml') {
   Write-Error -Message "File must be powershell script or module"
   Exit 1
 }
@@ -19,10 +19,10 @@ try {
     if ($line -match '^# SIG # Begin signature block|^<!-- SIG # Begin signature block -->') {
       break
     }
-    
+
     $null = $string_builder.AppendLine($line)
   }
-  
+
   Set-Content -Path $path.FullName -Value $string_builder.ToString()
 } catch {
   Pop-Location
